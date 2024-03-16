@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
+import "./styles.css";
 
 export default function App() {
   return (
     <div className="App">
-      <h1>Date Counter Version2</h1>
+      <h1>Date Counter Ver2.0</h1>
       <Counter />
     </div>
   );
