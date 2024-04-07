@@ -2,3 +2,6 @@ Create react app
 
 npx create-react-app AppNameHere
 
+# install package 
+--> cd to folder
+--> npm install OR npm i
