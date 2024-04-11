@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -7,7 +7,7 @@ const average = (arr) =>
 const KEY = "37bd4a41";
 
 export default function App() {
-  const [query, setQuery] = useState("interstellar");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,13 +52,15 @@ export default function App() {
   // We use useEffect to avoid any side effects, in this case infinte renders
   useEffect(
     function () {
+      const controller = new AbortController();
       async function fetchMovies() {
         try {
           setIsLoading(true);
           // reset error
           setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -68,9 +70,12 @@ export default function App() {
           if (data.Response === "False") throw new Error("Movie not found");
           setMovies(data.Search);
           // console.log(data.Search)
+          setError("");
         } catch (err) {
           console.error(err.message);
-          setError(err.message);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -80,7 +85,13 @@ export default function App() {
         setError("");
         return;
       }
+
+      handleCloseMovie();
       fetchMovies();
+      
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
@@ -316,6 +327,39 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   // function onSetRating(movie) {
 
   // }
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+
+      // cleanup tab title once movie is unselected
+      return function () {
+        document.title = "usePopcorn";
+        // console.log(`Clean up effect for movie ${title}`);
+      };
+    },
+    [title]
+  );
+
+  // use keyboard keys to close movie...
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          // console.log("Closing");
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      // Clean up eventListener function
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
 
   return (
     <div className="details">
