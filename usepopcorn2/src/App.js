@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
+import { useKey } from "./useKey";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -14,13 +16,7 @@ export default function App() {
 
   const [selectedId, setSelectedId] = useState(null);
 
-  //const [watched, setWatched] = useState([]);
-  const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem("watched");
-    return JSON.parse(storedValue);
-  });
-
-  // const tempQuery = "interstellar";
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
   function handleSelectedMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -42,14 +38,6 @@ export default function App() {
     // if movie.imdbID is different than passed in id, that will stay in watched array
     // else id's match DELETE from watched list and return array...
   }
-
-  // // Prefferec: local storage of data - method 2:
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <>
@@ -124,31 +112,11 @@ function Logo() {
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useEffect(
-    function () {
-      // console.log(inputEl.current);
-
-      function callback(e) {
-        if (document.activeElement === inputEl.current) return;
-
-        if (e.code === "Enter") {
-          inputEl.current.focus();
-          setQuery("");
-        }
-      }
-
-      document.addEventListener("keydown", callback);
-      return () => document.addEventListener("keydown", callback);
-    },
-    [setQuery]
-  );
-
-  // // Instead of below method we us useRef for the same.
-  // useEffect(function(){
-  //   const el = document.querySelector(".search")
-  //   // console.log(el)
-  //   el.focus();
-  // },[])
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
 
   return (
     <input
@@ -283,23 +251,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   );
 
   // effect to add event lister
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-          // console.log("CLOSING")
-        }
-      }
-      document.addEventListener("keydown", callback);
-
-      // CleanUp function... always cleanup effects... else might become a memory issue eg 1000s eventlisterns
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie]
-  );
+  useKey("Escape", onCloseMovie);
 
   function handleAdd() {
     const newWatchedMovie = {
