@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -8,9 +9,9 @@ const KEY = "37bd4a41";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const { movies, isLoading, error } = useMovies(query);
+
   const [selectedId, setSelectedId] = useState(null);
 
   //const [watched, setWatched] = useState([]);
@@ -41,55 +42,6 @@ export default function App() {
     // if movie.imdbID is different than passed in id, that will stay in watched array
     // else id's match DELETE from watched list and return array...
   }
-  useEffect(
-    function () {
-      const controller = new AbortController();
-
-      async function fetchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movies");
-
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found");
-          setMovies(data.Search);
-          setError("");
-          // console.log(data.Search)
-          // console.log(data);
-        } catch (err) {
-          // ignore Abort errors if not required, such as for every keystroke while typing... great hack!
-          if (err.name !== "AbortError") {
-            // console.log(err.message);
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (!query.length) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      handleCloseMovie();
-      fetchMovies();
-
-      // CleanUp function w Abort Controller (good stuff)...
-      return function () {
-        controller.abort();
-      };
-    },
-    [query]
-  );
 
   // // Prefferec: local storage of data - method 2:
   useEffect(
