@@ -24,6 +24,8 @@ const initialState = {
   isActive: false,
 };
 
+function reducer(state, action) {}
+
 export default function App() {
   return (
     <div className="App">
