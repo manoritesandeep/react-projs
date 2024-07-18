@@ -2,6 +2,9 @@ Create react app
 
 npx create-react-app AppNameHere
 
+Vite
+npm create vite@latest ## for the course we follow vite@4
+
 # install package 
 --> cd to folder
 --> npm install OR npm i
