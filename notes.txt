@@ -2,9 +2,22 @@ Create react app
 
 npx create-react-app AppNameHere
 
-Vite
+Vite - Project setup
 npm create vite@latest ## for the course we follow vite@4
+
+    ## Install npm packages
+    npm i
+
+    ## Install and config eslint in vite project
+    npm install eslint vite-plugin-eslint eslint-config-react-app --save-dev
+    >> Create file .eslintrc.json and enter {"extends":"react-app"}
+    >> Update vite.config.js file, defaultConfig update plugins:[react(),eslint()]  # import eslint from "vite-plugin-eslint"
 
 # install package 
 --> cd to folder
 --> npm install OR npm i
+
+## Setup fake API server Vite Project
+    -- npm i json-server
+    -- Goto package.json file under scripts add "server": "json-server --watch data/cities.json(path) --port 8000 -delay 500
+    -- npm run server
