@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 
 import { useState } from "react";
@@ -18,7 +19,7 @@ function Form() {
   const navigate = useNavigate();
 
   const [cityName, setCityName] = useState("");
-  const [country, setCountry] = useState("");
+  // const [country, setCountry] = useState("");
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState("");
 
