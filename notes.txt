@@ -21,3 +21,10 @@ npm create vite@latest ## for the course we follow vite@4
     -- npm i json-server
     -- Goto package.json file under scripts add "server": "json-server --watch data/cities.json(path) --port 8000 -delay 500
     -- npm run server
+
+## Install Maps
+    -- npm i react-leaflet leaflet
+
+## Install date picker
+    -- npm i react-datepicker
+    
