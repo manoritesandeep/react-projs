@@ -52,7 +52,7 @@ export function requestLoan(amount, purpose) {
   };
 }
 
-export function payloan() {
+export function payLoan() {
   return { type: "account/payLoan" };
 }
 
