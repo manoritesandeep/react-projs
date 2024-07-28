@@ -28,3 +28,11 @@ npm create vite@latest ## for the course we follow vite@4
 ## Install date picker
     -- npm i react-datepicker
     
+
+## Install TailwindCSS
+    -- npm install -D tailwindcss@{version} postcss autoprefixer
+    -- npm tailwindcss init -p
+    -- Configure accordingly check TailwindCSS documentation 
+    -- npm install -D prettier prettier-plugin-tailwindcss (prettier-plugin-tailwindcss Public)
+
+
