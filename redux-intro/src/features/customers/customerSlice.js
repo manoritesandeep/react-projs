@@ -1,48 +1,40 @@
-const initialStateCustomer = {
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
   fullName: "",
   nationalID: "",
   createdAt: "",
 };
 
-export default function customerReducer(state = initialStateCustomer, action) {
-  switch (action.type) {
-    case "customer/createCustomer":
-      return {
-        ...state,
-        fullName: action.payload.fullName,
-        nationalID: action.payload.nationalID,
-        createdAt: action.payload.createdAt,
-      };
+const customerSlice = createSlice({
+  name: "customer",
+  initialState,
+  reducers: {
+    createCustomer: {
+      prepare(fullName, nationalID) {
+        return {
+          payload: {
+            fullName,
+            nationalID,
+            createdAt: new Date().toISOString(),
+          },
+        };
+      },
+      reducer(state, action) {
+        state.fullName = action.payload.fullName;
+        state.nationalID = action.payload.nationalID;
+        state.createdAt = action.payload.createdAt;
+        console.log(state.fullName, state.nationalID, state.createdAt);
+      },
+    },
+    updateName(state, action) {
+      state.fullName = action.payload;
+    },
+  },
+});
 
-    case "customer/updateName":
-      return {
-        ...state,
-        fullName: action.payload,
-      };
+console.log(customerSlice);
 
-    default:
-      return state;
-  }
-}
+export const { createCustomer, updateName } = customerSlice.actions;
 
-// Action creater for Customer
-export function createCustomer(fullName, nationalID) {
-  return {
-    type: "customer/createCustomer",
-    payload: { fullName, nationalID, createdAt: new Date().toISOString() },
-  };
-}
-
-export function updateName(fullName) {
-  return {
-    type: "customer/updateName",
-    payload: fullName,
-  };
-}
-
-// store.dispatch(createCustomer("Sandeep Solanki", "123456789"));
-// console.log(store.getState());
-
-// store.dispatch(updateName("Sandeep"));
-// store.dispatch(deposit(1000));
-// console.log(store.getState());
+export default customerSlice.reducer;
