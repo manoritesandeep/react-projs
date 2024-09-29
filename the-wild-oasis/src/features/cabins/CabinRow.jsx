@@ -52,7 +52,6 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
   const { isDeleting, deleteCabin } = useDeleteCabin();
-  // eslint-disable-next-line no-unused-vars
   const { isCreating, createCabin } = useCreateCabin();
 
   const {
@@ -93,7 +92,11 @@ function CabinRow({ cabin }) {
             <Menus.Toggle id={cabinId} />
 
             <Menus.List id={cabinId}>
-              <Menus.Button icon={<HiSquare2Stack />} onClick={handleSubmit}>
+              <Menus.Button
+                icon={<HiSquare2Stack />}
+                onClick={handleSubmit}
+                disabled={isCreating}
+              >
                 Duplicate
               </Menus.Button>
 
