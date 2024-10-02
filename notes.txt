@@ -35,4 +35,5 @@ npm create vite@latest ## for the course we follow vite@4
     -- Configure accordingly check TailwindCSS documentation 
     -- npm install -D prettier prettier-plugin-tailwindcss (prettier-plugin-tailwindcss Public)
 
-
+## Next.js Project
+    -- npx create-next-app@latest proj_name_here
