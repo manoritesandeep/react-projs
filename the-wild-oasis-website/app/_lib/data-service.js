@@ -1,6 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 
 import { supabase } from "./supabase";
+import { notFound } from "next/navigation";
 
 /////////////
 // GET
@@ -17,6 +18,8 @@ export async function getCabin(id) {
 
   if (error) {
     console.error(error);
+    // This function allows you to render the not-found.js file within a route segment as well as inject a tag.
+    notFound();
   }
 
   return data;
