@@ -2,6 +2,7 @@ import React from "react";
 import { Suspense } from "react";
 import CabinList from "@/app/_components/CabinList";
 import Spinner from "@/app/_components/Spinner";
+import Filter from "@/app/_components/Filter";
 
 // import TextExpander from "../_components/TextExpander";
 // import Counter from "../_components/Counter";
@@ -14,10 +15,14 @@ export const metadata = {
   title: "Cabins",
 };
 
-export default function Page() {
+export default function Page({ searchParams }) {
   // console.log("Starting...");
   // const cabins = await getCabins();
   // console.log(cabins);
+
+  // console.log(searchParams);
+
+  const filter = searchParams?.capacity ?? "all";
 
   return (
     <div>
@@ -34,8 +39,11 @@ export default function Page() {
         Welcome to paradise.
         {/* </TextExpander> */}
       </p>
-      <Suspense fallback={<Spinner />}>
-        <CabinList />
+      <div className="flex justify-end mb-8">
+        <Filter />
+      </div>
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );
