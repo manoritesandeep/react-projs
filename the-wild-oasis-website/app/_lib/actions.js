@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
+import { getBookings } from "./data-service";
 
 export async function updateGuest(formData) {
   // console.log(formData);
@@ -31,6 +32,27 @@ export async function updateGuest(formData) {
 
   // Immediately update data on the page
   revalidatePath("/account/profile");
+}
+
+export async function deleteReservation(bookingId) {
+  const session = await auth();
+  if (!session) throw new Error("You must be logged in to perform the action");
+
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingsIds = guestBookings.map((booking) => booking.id);
+
+  // Very important secruity feature to avoid hackers delete bookings using cmd or curl code in terminal
+  if (!guestBookingsIds.includes(bookingId))
+    throw new Error("You are not permitted to delete this booking");
+
+  const { error } = await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", bookingId);
+
+  if (error) throw new Error("Booking could not be deleted");
+
+  revalidatePath("/account/reservations");
 }
 
 export async function signInAction() {
