@@ -36,6 +36,10 @@ export async function updateGuest(formData) {
 }
 
 export async function deleteReservation(bookingId) {
+  // // for testing optimistic hook
+  await new Promise((res) => setTimeout(res, 5000));
+  // throw new Error();
+
   const session = await auth();
   if (!session) throw new Error("You must be logged in to perform the action");
 
